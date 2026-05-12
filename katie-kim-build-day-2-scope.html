@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katie Build Day — Scope of Work</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+    padding: 24px 20px 48px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 24px;
+  }
+  .header h1 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  .header p { font-size: 13px; color: #a0aec0; }
+  .header .meta { display: flex; gap: 20px; margin-top: 14px; flex-wrap: wrap; }
+  .meta-item { background: rgba(255,255,255,0.1); border-radius: 6px; padding: 6px 12px; font-size: 12px; }
+  .meta-item strong { display: block; color: #68d391; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .legend {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    margin-bottom: 20px;
+    background: white;
+    border-radius: 10px;
+    padding: 14px 18px;
+    border: 1px solid #e2e8f0;
+    align-items: center;
+  }
+  .legend span { font-size: 12px; color: #4a5568; font-weight: 600; margin-right: 4px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+  .dot-must { background: #e53e3e; }
+  .dot-should { background: #dd6b20; }
+  .dot-nice { background: #38a169; }
+  .dot-next { background: #a0aec0; }
+  .legend-item { display: flex; align-items: center; }
+
+  .section {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .section-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid #e2e8f0;
+    cursor: pointer;
+    user-select: none;
+  }
+  .section-header:hover { background: #f7fafc; }
+  .section-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .icon-blue { background: #ebf8ff; }
+  .icon-purple { background: #f3e8ff; }
+  .icon-orange { background: #fff3e0; }
+  .icon-green { background: #f0fff4; }
+  .icon-red { background: #fff5f5; }
+  .section-title { font-size: 15px; font-weight: 700; color: #1a1a2e; }
+  .section-subtitle { font-size: 12px; color: #718096; margin-top: 1px; }
+  .section-badge {
+    margin-left: auto;
+    font-size: 11px; font-weight: 600;
+    border-radius: 12px; padding: 3px 10px;
+    flex-shrink: 0;
+  }
+  .badge-must { background: #fed7d7; color: #c53030; }
+  .badge-should { background: #fde8d2; color: #c05621; }
+  .badge-nice { background: #c6f6d5; color: #276749; }
+  .chevron { font-size: 11px; color: #a0aec0; margin-left: 8px; transition: transform 0.2s; }
+  .chevron.open { transform: rotate(90deg); }
+
+  .section-body { padding: 20px; display: none; }
+  .section-body.open { display: block; }
+
+  .task-list { list-style: none; }
+  .task-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .task-item:last-child { border-bottom: none; }
+  .task-check {
+    width: 18px; height: 18px; border-radius: 4px;
+    border: 2px solid #e2e8f0;
+    flex-shrink: 0; margin-top: 2px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .task-check.checked { background: #48bb78; border-color: #48bb78; color: white; font-size: 11px; }
+  .task-content { flex: 1; }
+  .task-name { font-size: 13px; font-weight: 600; color: #2d3748; }
+  .task-name.done { text-decoration: line-through; color: #a0aec0; }
+  .task-detail { font-size: 12px; color: #718096; margin-top: 3px; }
+  .task-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 5px; }
+  .tag {
+    font-size: 10px; font-weight: 600; padding: 2px 7px;
+    border-radius: 10px; text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  .tag-table { background: #e9d8fd; color: #553c9a; }
+  .tag-interface { background: #bee3f8; color: #2b6cb0; }
+  .tag-automation { background: #fefcbf; color: #744210; }
+  .tag-field { background: #fed7d7; color: #822727; }
+  .tag-agent { background: #c6f6d5; color: #22543d; }
+
+  .note-box {
+    background: #fffbeb;
+    border-left: 3px solid #f6ad55;
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    margin: 12px 0;
+    font-size: 12px;
+    color: #744210;
+  }
+  .note-box strong { color: #c05621; }
+
+  .info-box {
+    background: #ebf8ff;
+    border-left: 3px solid #63b3ed;
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    margin: 12px 0;
+    font-size: 12px;
+    color: #2c5282;
+  }
+
+  .divider { height: 1px; background: #f1f5f9; margin: 14px 0; }
+
+  .sub-heading {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.8px; color: #718096; margin-bottom: 8px; margin-top: 14px;
+  }
+
+  .field-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 12px; }
+  .field-table th {
+    background: #f7fafc; padding: 7px 10px; text-align: left;
+    font-weight: 700; color: #4a5568;
+    border-bottom: 2px solid #e2e8f0;
+  }
+  .field-table td {
+    padding: 7px 10px; border-bottom: 1px solid #f1f5f9; color: #2d3748;
+  }
+  .field-table tr:last-child td { border-bottom: none; }
+  .exists { color: #38a169; font-weight: 700; }
+  .missing { color: #e53e3e; font-weight: 700; }
+
+  .summary-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;
+  }
+  .summary-card {
+    background: white; border-radius: 10px; border: 1px solid #e2e8f0;
+    padding: 16px; text-align: center;
+  }
+  .summary-card .number { font-size: 28px; font-weight: 800; color: #1a1a2e; }
+  .summary-card .label { font-size: 11px; color: #718096; margin-top: 2px; }
+
+  .toggle-all {
+    display: flex; justify-content: flex-end; margin-bottom: 12px;
+  }
+  .toggle-all button {
+    background: none; border: 1px solid #e2e8f0; border-radius: 6px;
+    padding: 5px 12px; font-size: 12px; color: #718096; cursor: pointer;
+  }
+  .toggle-all button:hover { background: #f7fafc; }
+
+  .group-label {
+    font-size: 11px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 1px; color: #a0aec0; margin: 24px 0 10px;
+    padding-left: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🏗️ Build Day Scope of Work — Katie Kim</h1>
+  <p>Based on strategy call transcript + Airtable base review (Katie Kim &amp; The Kim Group Operations HQ)</p>
+  <div class="meta">
+    <div class="meta-item"><strong>Build Day</strong>May 20th</div>
+    <div class="meta-item"><strong>Goal</strong>Get CRM + Tasks operational</div>
+    <div class="meta-item"><strong>Prepared by</strong>Jacqui Money</div>
+  </div>
+</div>
+
+<div style="background:#f0fff4;border:1px solid #9ae6b4;border-radius:10px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:#276749;">
+  <strong>✅ Build Day focus:</strong> Tasks system + Interfaces for May and Katie. Those two are the non-negotiables. Pipeline cleanup and Contracts fields are valuable but move to Medium Priority — do them if you have runway. Renewal automations are parked as If Time Allows.
+</div>
+
+<div class="summary-grid">
+  <div class="summary-card">
+    <div class="number" id="total-tasks">0</div>
+    <div class="label">Total Work Items</div>
+  </div>
+  <div class="summary-card">
+    <div class="number" id="done-tasks" style="color:#48bb78">0</div>
+    <div class="label">Completed</div>
+  </div>
+  <div class="summary-card">
+    <div class="number" id="pct-tasks" style="color:#ed8936">0%</div>
+    <div class="label">Progress</div>
+  </div>
+</div>
+
+<div class="legend">
+  <span>Priority:</span>
+  <div class="legend-item"><span class="dot dot-must"></span><span style="font-size:12px;color:#4a5568">🔴 High Priority — core goal</span></div>
+  <div class="legend-item"><span class="dot dot-should"></span><span style="font-size:12px;color:#4a5568">🟠 Medium Priority — if there's runway</span></div>
+  <div class="legend-item"><span class="dot dot-nice"></span><span style="font-size:12px;color:#4a5568">🟢 If Time Allows</span></div>
+  <div class="legend-item"><span class="dot dot-next"></span><span style="font-size:12px;color:#4a5568">⏸️ Next Build Day</span></div>
+</div>
+
+<div class="toggle-all">
+  <button onclick="toggleAll()">Expand / Collapse All</button>
+</div>
+
+<!-- ── HIGH PRIORITY ── -->
+<div class="group-label">🔴 High Priority</div>
+
+<!-- SECTION 1: Task System -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-blue">📋</div>
+    <div>
+      <div class="section-title">1. Task System — Automations + Contract Link</div>
+      <div class="section-subtitle">Meeting → Task extraction, contract-task connection, team assignment flow</div>
+    </div>
+    <span class="section-badge badge-must">🔴 High Priority</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+
+    <div class="info-box">
+      <strong>What's already there:</strong> The Tasks table is well-structured with Status, Priority, Assignee, Due Date, Source, Meeting link, Responsible Role, Days Remaining formula. The Meetings table has an AI Summary field and a Tasks linked field. The connection exists — the automation just hasn't been built.
+    </div>
+
+    <div class="note-box">
+      <strong>Katie's ask:</strong> "I almost want like a human verification point on it — to be like, these are the to-dos, is this good? And I'd be like, yes, and then it goes and saves it." Consider a "Pending Approval" status on tasks, or a dedicated view Katie reviews before tasks go live.
+    </div>
+
+    <ul class="task-list">
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Set Meeting AI Summary to run automatically (trigger: when record created)</div>
+          <div class="task-detail">Currently Katie has to manually kick off the AI summary agent. Set the AI Summary field in Meetings to trigger on record creation, or build an Airtable automation that runs it. Confirmed this is possible and doesn't use many tokens.</div>
+          <div class="task-tags"><span class="tag tag-automation">Automation</span><span class="tag tag-agent">AI Agent</span></div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Build automation: Extract to-dos from AI Summary → create Tasks records</div>
+          <div class="task-detail">When Meeting AI Summary is populated, parse out action items and create linked Task records (one per to-do) with Status = "Pending Approval", Source = "Meeting", Meeting linked. New Airtable automation capability confirmed as possible.</div>
+          <div class="task-tags"><span class="tag tag-automation">Automation</span><span class="tag tag-agent">AI Agent</span></div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Add "Pending Approval" status option to Tasks table</div>
+          <div class="task-detail">Gives Katie (and May) a human review step. Interface can show a "Review Queue" filtered to Pending Approval tasks before they become active. Matches Katie's request for a verification checkpoint.</div>
+          <div class="task-tags"><span class="tag tag-table">Tasks Table</span><span class="tag tag-field">Field Update</span></div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Link Tasks table to Contracts table (bidirectional)</div>
+          <div class="task-detail">Katie specifically asked for this: "I think we should connect the contracts table to the task table so we can relate it." So all renewal tasks, LOI follow-ups etc. connect to their contract. Contracts table doesn't currently have a Tasks linked field — add it.</div>
+          <div class="task-tags"><span class="tag tag-table">Contracts Table</span><span class="tag tag-field">New Linked Field</span></div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Build automation: Notify via Slack when task assigned</div>
+          <div class="task-detail">If not adding team to Airtable yet, set up a Slack automation: when a Task's Assigned Person is set, post a Slack message to that person (or a general channel) with the task name, due date, and meeting/project context. Agreed this is the preferred notification method.</div>
+          <div class="task-tags"><span class="tag tag-automation">Automation</span></div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Auto-tag meeting with related Company/Prospect when keyword matches</div>
+          <div class="task-detail">Katie asked: "If there is a keyword that connects it with a client, a project, or an opportunity, that meeting gets tagged with that client." Build an AI automation on Meetings that looks at the Title/Transcript and suggests a Related Company to link — or auto-links if match confidence is high.</div>
+          <div class="task-tags"><span class="tag tag-automation">Automation</span><span class="tag tag-agent">AI Agent</span></div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- SECTION 2: Interfaces -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-blue">🖥️</div>
+    <div>
+      <div class="section-title">2. Interfaces — Build Core Views</div>
+      <div class="section-subtitle">Business Development command center, Lease Renewal dashboard, Team task view, Data entry hub</div>
+    </div>
+    <span class="section-badge badge-must">🔴 High Priority</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+
+    <div class="info-box">
+      <strong>Agreed approach:</strong> No single form that populates all tables (not possible in Airtable). Instead: one interface as a hub with links to all forms. Team lives in interfaces, not raw tables. Add team as paid Airtable users once interfaces are ready for testing.
+    </div>
+
+    <div class="sub-heading">Interface A — Business Development Command Center (for Katie)</div>
+    <ul class="task-list">
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Create "BD Command Center" interface</div>
+          <div class="task-detail">Sections: (1) Active Pipeline — Prospects grouped by Stage, filterable by Kim Company. (2) Needs Attention 🚨 — prospects flagged as stale (7+ days no touch). (3) This Week's Follow-Ups — Next Follow-Up Date = this week. (4) Quick-log BD Activity button — opens BD Time Log form. (5) Add New Prospect button.</div>
+          <div class="task-tags"><span class="tag tag-interface">Interface</span></div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="sub-heading">Interface B — Lease Renewal Dashboard (for Katie)</div>
+    <ul class="task-list">
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Create "Lease Renewal Dashboard" interface</div>
+          <div class="task-detail">Sections by renewal window: 12 Months Out | 9 Months Out | 6 Months Out | 3 Months Out | Urgent / Overdue | Vacating. Each section shows: Tenant, Suite, Property, Lease End Date, Renewal Status (editable inline), linked Tasks. Katie can update status and check off tasks without leaving the interface.</div>
+          <div class="task-tags"><span class="tag tag-interface">Interface</span></div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="sub-heading">Interface C — Team Task View (for May, Krishna)</div>
+    <ul class="task-list">
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Create "My Tasks" interface (filtered per user)</div>
+          <div class="task-detail">Shows tasks assigned to the current user. Sections: Pending Approval (new meeting to-dos awaiting review) | To Do | In Progress | Completed This Week. Team members can mark tasks done, add notes, and see their due dates. Requires adding team members as Airtable users to enable editing.</div>
+          <div class="task-tags"><span class="tag tag-interface">Interface</span></div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="sub-heading">Interface D — Data Entry Hub (for May)</div>
+    <ul class="task-list">
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Create "Add New Record" hub interface</div>
+          <div class="task-detail">One screen with clearly labelled buttons/links: "Add New Prospect/Lead" | "Add New Tenant" | "Log a Meeting" | "Add New Company" | "Add New Contact" | "Upload a Contract." Each button opens the relevant form. This is the "one place to go" Katie asked for — not one form, but one dashboard with all entry points.</div>
+          <div class="task-tags"><span class="tag tag-interface">Interface</span></div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── MEDIUM PRIORITY ── -->
+<div class="group-label">🟠 Medium Priority</div>
+
+<!-- SECTION 3: Pipeline Overhaul -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-purple">🎯</div>
+    <div>
+      <div class="section-title">3. Prospects / Opportunities → Pipeline Overhaul</div>
+      <div class="section-subtitle">Rename, restructure stages, add activity staleness logic</div>
+    </div>
+    <span class="section-badge badge-should">🟠 Medium Priority</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+
+    <div class="info-box">
+      <strong>Confirmed in Jacqui's recap:</strong> "I'm going to finish up the prospects and opportunities, clean that up as to what we discussed today." This was explicitly called out — but it's Medium Priority because the interfaces can be started before this is fully polished. Good bones already exist: Pipeline, Stage, Expected Value (AI), Next Suggested Action (AI), Deal Value, Close Date, Kim Company, BD Time Log link, and Related Meetings.
+    </div>
+
+    <div class="sub-heading">Pipeline Stage Options — Update to Match Katie's Workflow</div>
+    <table class="field-table">
+      <tr><th>Current Stage Options</th><th>Suggested Update</th></tr>
+      <tr><td>Leasing / Listing / Sale / Consulting / Investor / Vendor / Active</td><td>These are <em>pipeline types</em>, not stages. Keep as "Pipeline" field ✅</td></tr>
+      <tr><td>Stage options (incomplete)</td><td>New Contact → Qualified → Property Shown → LOI Submitted → LOI Negotiating → Lease/Contract Draft → Closed Won → Closed Lost / Not Proceeding</td></tr>
+    </table>
+
+    <ul class="task-list">
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Update Stage field options to match LOI → Lease pipeline flow</div>
+          <div class="task-detail">Replace existing stage options with: New Contact, Qualified, Property Shown, LOI Submitted, LOI Negotiating, Lease/Contract Draft, Closed Won, Closed Lost.</div>
+          <div class="task-tags"><span class="tag tag-table">Prospects Table</span><span class="tag tag-field">Field Edit</span></div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Add "Last Activity Date" rollup field</div>
+          <div class="task-detail">Pull the most recent date from BD Time Log entries linked to this prospect. Already linked via the "BD Time Log" field — just needs a rollup (MAX of Date field in BD Time Log).</div>
+          <div class="task-tags"><span class="tag tag-table">Prospects Table</span><span class="tag tag-field">New Field</span></div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Add "Days Since Last Touch" formula field</div>
+          <div class="task-detail">Formula: TODAY() - {Last Activity Date}. Katie wants a flag when no touch in 7+ days.</div>
+          <div class="task-tags"><span class="tag tag-table">Prospects Table</span><span class="tag tag-field">Formula Field</span></div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Add "Needs Attention 🚨" formula field</div>
+          <div class="task-detail">Returns ✅ if Days Since Last Touch > 7 AND Stage is not Closed. Surfaces stale prospects for Katie's BD command center view.</div>
+          <div class="task-tags"><span class="tag tag-table">Prospects Table</span><span class="tag tag-field">Formula Field</span></div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Add "Property Interested In" linked field (link to Properties table)</div>
+          <div class="task-detail">When a prospect comes in, capture which property they're enquiring about. The Properties table already exists — add a linked field here.</div>
+          <div class="task-tags"><span class="tag tag-table">Prospects Table</span><span class="tag tag-field">New Linked Field</span></div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Verify and clean up existing pipeline/stage records</div>
+          <div class="task-detail">May has been entering data. Do a quick audit — remap any existing records to the new stage options before building the interface.</div>
+          <div class="task-tags"><span class="tag tag-table">Prospects Table</span></div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- SECTION 4: Contracts Table -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-red">📄</div>
+    <div>
+      <div class="section-title">4. Contracts Table — Missing Fields + AI Agent Updates</div>
+      <div class="section-subtitle">Add date fields, rent term breakdown, update renewal status options</div>
+    </div>
+    <span class="section-badge badge-should">🟠 Medium Priority</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+
+    <div class="info-box">
+      <strong>Confirmed in Jacqui's recap:</strong> "The automations and agents in the contracts table" were explicitly called out as part of this build day. Add the missing fields first, then update the extraction agent so it targets Addendum 1 for rent terms. These are prerequisites for the renewal dashboard to display meaningful data.
+    </div>
+
+    <div class="sub-heading">Date Fields — Current State vs. What's Needed</div>
+    <table class="field-table">
+      <tr><th>Field</th><th>Status</th><th>Notes</th></tr>
+      <tr><td>Lease Commencement Date</td><td class="exists">✅ Exists</td><td>Already in base</td></tr>
+      <tr><td>Rent Commencement Date</td><td class="exists">✅ Exists</td><td>Already in base</td></tr>
+      <tr><td>Lease End Date</td><td class="exists">✅ Exists</td><td>Already in base</td></tr>
+      <tr><td>Date Signed (Execution Date)</td><td class="exists">✅ Exists</td><td>Field is "Date Signed" — confirm AI extracts this correctly</td></tr>
+      <tr><td>Move-In Date</td><td class="missing">❌ Missing</td><td>Add new Date field</td></tr>
+    </table>
+
+    <div class="sub-heading">Rent Term Breakdown Fields — All Missing</div>
+    <div class="note-box">
+      <strong>From the call:</strong> Leases have up to 5 rent escalation periods (e.g. Months 1–24, 25–48, 49–60). Each period has: Base Rent, Triple Net amount, Utility Fee (if applicable), Total Monthly. Add structured fields so the AI agent can extract from Addendum 1 of each lease.
+    </div>
+    <table class="field-table">
+      <tr><th>Fields to Add</th><th>Type</th><th>Notes</th></tr>
+      <tr><td>Rent Term 1 — Months (e.g. "1–24")</td><td>Single Line Text</td><td>e.g. "1–24", "1–12"</td></tr>
+      <tr><td>Rent Term 1 — Base Monthly Rent</td><td>Currency</td><td>From Addendum 1</td></tr>
+      <tr><td>Rent Term 1 — Triple Net (NNN)</td><td>Currency</td><td>From Addendum 1</td></tr>
+      <tr><td>Rent Term 1 — Utility Fee</td><td>Currency</td><td>If applicable</td></tr>
+      <tr><td>Rent Term 1 — Total Monthly</td><td>Currency or Formula</td><td>Sum of above</td></tr>
+      <tr><td>Repeat for Terms 2–5</td><td>—</td><td>Terms 4 and 5 will often be empty</td></tr>
+    </table>
+
+    <ul class="task-list">
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Add Move-In Date field to Contracts table</div>
+          <div class="task-tags"><span class="tag tag-field">New Field</span><span class="tag tag-table">Contracts Table</span></div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Add Rent Term 1–5 breakdown fields (5 sets × 4 fields = 20 new fields)</div>
+          <div class="task-detail">Base Monthly Rent, Triple Net (NNN), Utility Fee, and Total Monthly for each of up to 5 rent escalation periods. Terms 4 and 5 can be left empty if the lease is shorter.</div>
+          <div class="task-tags"><span class="tag tag-field">New Fields</span><span class="tag tag-table">Contracts Table</span></div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Update AI agent to extract rent terms from Addendum 1</div>
+          <div class="task-detail">The agent should specifically look at "Addendum 1" (the rent/triple net table) to pull the Base Monthly Rent, Triple Net Monthly Rent, Utility Fee, and Total Monthly Rent per period, and map them to the new fields. Update the existing AI extraction agent prompt to include these fields.</div>
+          <div class="task-tags"><span class="tag tag-agent">AI Agent</span></div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Update Renewal Status field options</div>
+          <div class="task-detail">New options: 12 Months — Initial Inquiry, 9 Months — Follow Up, 6 Months — Prepare Renewal Addendum, 3 Months — Urgent Outreach, Renewal Submitted, Renewed ✅, Not Renewing / Vacating.</div>
+          <div class="task-tags"><span class="tag tag-field">Field Update</span><span class="tag tag-table">Contracts Table</span></div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── IF TIME ALLOWS ── -->
+<div class="group-label">🟢 If Time Allows</div>
+
+<!-- SECTION 5: Lease Renewal Automations -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-orange">🔔</div>
+    <div>
+      <div class="section-title">5. Lease Renewal Automations — Slack Reminders</div>
+      <div class="section-subtitle">Date-triggered notifications at 12, 9, 6, and 3 month marks</div>
+    </div>
+    <span class="section-badge badge-nice">🟢 If Time Allows</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+
+    <div class="info-box">
+      <strong>Note from strategy call:</strong> This was discussed as a concept, not a firm commitment for this build day. It also depends on the Contracts fields in Section 4 being done first. Only attempt if Sections 1 and 2 are fully complete and there's time remaining.
+    </div>
+
+    <div class="note-box">
+      <strong>Special logic:</strong> If Lease End Date − Lease Commencement Date ≤ 18 months, skip the 12-month reminder (you'd be bugging them right after they signed) and start at 120 days out instead.
+    </div>
+
+    <ul class="task-list">
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Build "Lease Duration" formula field in Contracts</div>
+          <div class="task-detail">DATETIME_DIFF({Lease End Date}, {Lease Commencement Date}, 'months'). Used to trigger the short-lease exception rule (≤18 months = skip 12-month reminder).</div>
+          <div class="task-tags"><span class="tag tag-field">Formula Field</span><span class="tag tag-table">Contracts Table</span></div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Build 4 Airtable automations — Lease renewal Slack alerts (12/9/6/3 months)</div>
+          <div class="task-detail">Trigger: scheduled daily check. Condition: Lease End Date is exactly N months from today AND Lease Duration > 18 months (for 12-month trigger) AND Renewal Status is not "Renewed" or "Not Renewing". Action: Send Slack message to Katie with tenant name, suite, property, and renewal checkpoint.</div>
+          <div class="task-tags"><span class="tag tag-automation">Automation</span></div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Build short-lease automation — 120-day reminder</div>
+          <div class="task-detail">Same trigger but condition: Lease End Date is 120 days from today AND Lease Duration ≤ 18 months. Covers the one-year (and shorter) lease edge case Katie described.</div>
+          <div class="task-tags"><span class="tag tag-automation">Automation</span></div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Build automation: "Vacating" status → create marketing task</div>
+          <div class="task-detail">When Renewal Status = "Not Renewing / Vacating", auto-create a Task linked to that contract: "Market [Suite] — vacancy coming [date]" and post to Slack.</div>
+          <div class="task-tags"><span class="tag tag-automation">Automation</span></div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- SECTION 6: Nice to Have -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-green">✨</div>
+    <div>
+      <div class="section-title">6. Additional Nice to Have</div>
+      <div class="section-subtitle">Items from the call that are valuable but not Day 1 critical</div>
+    </div>
+    <span class="section-badge badge-nice">🟢 If Time Allows</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+    <ul class="task-list">
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Add activity count rollup fields to Prospects (calls, showings, emails)</div>
+          <div class="task-detail">Roll up BD Time Log records by Activity Type to show total calls, emails, showings per prospect. Surfaces activity depth on the BD command center.</div>
+          <div class="task-tags"><span class="tag tag-table">Prospects Table</span><span class="tag tag-field">Rollup Fields</span></div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Connect Meetings → Prospects via keyword matching (AI automation)</div>
+          <div class="task-detail">When a meeting is added, an AI automation scans the title/transcript for company or prospect names already in the base and suggests (or auto-adds) the link.</div>
+          <div class="task-tags"><span class="tag tag-automation">Automation</span><span class="tag tag-agent">AI Agent</span></div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Add "Total Monthly Revenue" formula to Contracts (for Keller Station snapshot)</div>
+          <div class="task-detail">Sum of current rent term values (base + NNN + utility) for all active contracts at a given property. Feeds a future KPI / CFO dashboard.</div>
+          <div class="task-tags"><span class="tag tag-table">Contracts Table</span><span class="tag tag-field">Formula Field</span></div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Re-run AI extraction agent on existing contracts to populate new rent term fields</div>
+          <div class="task-detail">Once fields are added and agent is updated, run it across all uploaded leases. May can verify outputs.</div>
+          <div class="task-tags"><span class="tag tag-agent">AI Agent</span></div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── NEXT BUILD DAY ── -->
+<div class="group-label">⏸️ Next Build Day</div>
+
+<!-- SECTION 7 -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-purple">📅</div>
+    <div>
+      <div class="section-title">7. Save for Next Build Day</div>
+      <div class="section-subtitle">Explicitly parked in the strategy call — don't start these on this build day</div>
+    </div>
+    <span class="section-badge" style="background:#e2e8f0;color:#718096">⏸️ Next Build Day</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+    <ul class="task-list">
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Triple Net reconciliation interface (select property → all tenants auto-populate)</div>
+          <div class="task-detail">"I don't want to focus on getting the interface for doing the reconciliation right now, but we need the data in there." — Parked for next build day.</div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Projected cash flow / vacancy modeling</div>
+          <div class="task-detail">Requires clean rent term data first. Build once this build day's fields are populated and verified.</div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">Client-facing portal / listing portal (via Softr or Airtable pages)</div>
+          <div class="task-detail">Discussed as a future capability. Requires base to be solid first. Softr bolt-on for login + client portal view.</div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">HyperAgent integration (Airtable's new AI agent layer)</div>
+          <div class="task-detail">Jacqui has early access. Explore once base is clean — can act as a chief of staff, pull in prospects from Crexi, run briefings, etc.</div>
+        </div>
+      </li>
+      <li class="task-item">
+        <div class="task-check" onclick="toggleCheck(this)"></div>
+        <div class="task-content">
+          <div class="task-name">PropTech listings portal + grants/incentives research agent</div>
+          <div class="task-detail">Katie is building this in Claude Code. Worth connecting to Airtable later as the central data source.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  function toggleSection(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.chevron');
+    body.classList.toggle('open');
+    chevron.classList.toggle('open');
+  }
+
+  function toggleCheck(el) {
+    el.classList.toggle('checked');
+    el.innerHTML = el.classList.contains('checked') ? '✓' : '';
+    const taskName = el.nextElementSibling.querySelector('.task-name');
+    taskName.classList.toggle('done');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const all = document.querySelectorAll('.task-check');
+    const done = document.querySelectorAll('.task-check.checked');
+    const total = all.length;
+    const completed = done.length;
+    const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+    document.getElementById('total-tasks').textContent = total;
+    document.getElementById('done-tasks').textContent = completed;
+    document.getElementById('pct-tasks').textContent = pct + '%';
+  }
+
+  let allOpen = false;
+  function toggleAll() {
+    allOpen = !allOpen;
+    document.querySelectorAll('.section-body').forEach(b => {
+      b.classList.toggle('open', allOpen);
+    });
+    document.querySelectorAll('.chevron').forEach(c => {
+      c.classList.toggle('open', allOpen);
+    });
+  }
+
+  // Open High Priority sections by default
+  document.addEventListener('DOMContentLoaded', () => {
+    const bodies = document.querySelectorAll('.section-body');
+    const chevrons = document.querySelectorAll('.chevron');
+    for (let i = 0; i < Math.min(2, bodies.length); i++) {
+      bodies[i].classList.add('open');
+      chevrons[i].classList.add('open');
+    }
+    updateProgress();
+  });
+
+  updateProgress();
+</script>
+</body>
+</html>
