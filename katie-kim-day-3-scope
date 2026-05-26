@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katie Kim — Build Day Scope of Work</title>
+<style>
+  :root {
+    --brand-primary: #1C3344;
+    --brand-accent: #2E9E72;
+    --brand-accent-light: #E8F7F2;
+    --brand-warm: #E8904A;
+    --brand-warm-light: #FEF3E8;
+    --bg: #F6F7F8;
+    --card: #ffffff;
+    --border: #E2E8F0;
+    --text-dark: #1A2332;
+    --text-mid: #4A5568;
+    --text-light: #718096;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text-dark);
+    padding: 24px 20px 60px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--brand-primary) 0%, #243D52 100%);
+    color: white;
+    border-radius: 14px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+  }
+  .header-brand {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
+    text-transform: uppercase; color: var(--brand-accent); margin-bottom: 6px;
+  }
+  .header h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+  .header .subtitle { font-size: 13px; color: #A0AEC0; }
+  .header .meta { display: flex; gap: 14px; margin-top: 18px; flex-wrap: wrap; }
+  .meta-item {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 8px 14px; font-size: 12px;
+  }
+  .meta-item strong {
+    display: block; color: var(--brand-accent);
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 2px;
+  }
+
+  /* FOCUS BOX */
+  .focus-box {
+    background: var(--brand-accent-light); border: 1px solid #A8DFCB;
+    border-radius: 10px; padding: 14px 18px; margin-bottom: 20px;
+    font-size: 13px; color: #1A5C3F;
+  }
+  .focus-box strong { color: #166647; }
+
+  /* LEGEND */
+  .legend {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 18px;
+    display: flex; gap: 20px; flex-wrap: wrap; align-items: center;
+    margin-bottom: 20px; font-size: 12px;
+  }
+  .legend-label { font-weight: 700; color: var(--text-mid); margin-right: 4px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; color: var(--text-mid); }
+  .dot { width: 9px; height: 9px; border-radius: 50%; }
+  .dot-high { background: #E53E3E; }
+  .dot-med  { background: var(--brand-warm); }
+  .dot-nice { background: var(--brand-accent); }
+  .dot-next { background: #A0AEC0; }
+
+  /* GROUP LABELS */
+  .group-label {
+    font-size: 11px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 1px; color: #A0AEC0; margin: 28px 0 10px 4px;
+  }
+
+  /* SECTIONS */
+  .section {
+    background: var(--card); border-radius: 12px; border: 1px solid var(--border);
+    margin-bottom: 16px; overflow: hidden;
+  }
+  .section-header {
+    padding: 16px 20px; display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid var(--border); cursor: pointer; user-select: none;
+  }
+  .section-header:hover { background: #FAFBFC; }
+  .section-icon {
+    width: 38px; height: 38px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; flex-shrink: 0;
+  }
+  .icon-teal   { background: var(--brand-accent-light); }
+  .icon-blue   { background: #EBF8FF; }
+  .icon-purple { background: #F3E8FF; }
+  .icon-orange { background: var(--brand-warm-light); }
+  .icon-red    { background: #FFF5F5; }
+  .icon-grey   { background: #F7FAFC; }
+  .section-title    { font-size: 15px; font-weight: 700; color: var(--text-dark); }
+  .section-subtitle { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+  .section-badge {
+    margin-left: auto; font-size: 11px; font-weight: 600;
+    border-radius: 12px; padding: 3px 10px; flex-shrink: 0;
+  }
+  .badge-high { background: #FED7D7; color: #C53030; }
+  .badge-med  { background: #FDEBD2; color: #C05621; }
+  .badge-nice { background: #C6F6D5; color: #276749; }
+  .badge-next { background: #E2E8F0; color: #718096; }
+  .chevron { font-size: 10px; color: #A0AEC0; margin-left: 8px; transition: transform 0.2s; }
+  .chevron.open { transform: rotate(90deg); }
+
+  .section-body { padding: 20px; display: none; }
+  .section-body.open { display: block; }
+
+  /* ITEM LIST */
+  .item-list { list-style: none; }
+  .item {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 11px 0; border-bottom: 1px solid #F1F5F9;
+  }
+  .item:last-child { border-bottom: none; }
+  .item-bullet {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--brand-accent); flex-shrink: 0; margin-top: 6px;
+  }
+  .item-bullet-med  { background: var(--brand-warm); }
+  .item-bullet-nice { background: #68D391; }
+  .item-bullet-next { background: #CBD5E0; }
+  .item-content { flex: 1; }
+  .item-name   { font-size: 13px; font-weight: 600; color: #2D3748; }
+  .item-detail { font-size: 12px; color: var(--text-light); margin-top: 3px; line-height: 1.5; }
+  .item-tags   { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 5px; }
+  .tag {
+    font-size: 10px; font-weight: 600; padding: 2px 7px;
+    border-radius: 10px; text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  .tag-table      { background: #E9D8FD; color: #553C9A; }
+  .tag-interface  { background: #BEE3F8; color: #2B6CB0; }
+  .tag-automation { background: #FEFCBF; color: #744210; }
+  .tag-field      { background: #FED7D7; color: #822727; }
+  .tag-ai         { background: #C6F6D5; color: #22543D; }
+  .tag-formula    { background: #E2E8F0; color: #4A5568; }
+  .tag-slack      { background: #E8D5F5; color: #6B21A8; }
+  .tag-admin      { background: #FEE2E2; color: #991B1B; }
+
+  /* CALLOUT BOXES */
+  .note-box {
+    background: #FFFBEB; border-left: 3px solid #F6AD55;
+    border-radius: 0 8px 8px 0; padding: 10px 14px; margin: 12px 0;
+    font-size: 12px; color: #744210;
+  }
+  .note-box strong { color: #C05621; }
+  .info-box {
+    background: #EBF8FF; border-left: 3px solid #63B3ED;
+    border-radius: 0 8px 8px 0; padding: 10px 14px; margin: 12px 0;
+    font-size: 12px; color: #2C5282;
+  }
+  .decision-box {
+    background: var(--brand-accent-light); border-left: 3px solid var(--brand-accent);
+    border-radius: 0 8px 8px 0; padding: 10px 14px; margin: 12px 0;
+    font-size: 12px; color: #1A5C3F;
+  }
+
+  /* TABLES */
+  .field-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 12px; }
+  .field-table th {
+    background: #F7FAFC; padding: 7px 10px; text-align: left;
+    font-weight: 700; color: var(--text-mid); border-bottom: 2px solid var(--border);
+  }
+  .field-table td { padding: 7px 10px; border-bottom: 1px solid #F1F5F9; color: #2D3748; }
+  .field-table tr:last-child td { border-bottom: none; }
+  .exists  { color: #38A169; font-weight: 700; }
+  .missing { color: #E53E3E; font-weight: 700; }
+
+  /* SUB-HEADINGS */
+  .sub-heading {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.8px; color: var(--text-light); margin: 16px 0 8px;
+  }
+  .divider { height: 1px; background: #F1F5F9; margin: 14px 0; }
+
+  /* CONTROLS */
+  .controls { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+  .btn-toggle {
+    background: none; border: 1px solid var(--border); border-radius: 6px;
+    padding: 5px 14px; font-size: 12px; color: var(--text-light); cursor: pointer;
+  }
+  .btn-toggle:hover { background: #F7FAFC; }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 40px; padding: 20px 24px;
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    font-size: 12px; color: var(--text-light);
+  }
+  .footer strong { color: var(--brand-accent); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-brand">Jacqui Money — Systems &amp; Automation</div>
+  <h1>🏗️ Build Day Scope of Work — Katie Kim</h1>
+  <div class="subtitle">Katie Kim Operations System — Airtable CRM, Task Management &amp; Lease Renewal Automation</div>
+  <div class="meta">
+    <div class="meta-item"><strong>Build Day</strong>Wednesday, 27 May 2026</div>
+    <div class="meta-item"><strong>System</strong>Katie Kim Ops — Airtable</div>
+    <div class="meta-item"><strong>Goal</strong>Lease renewals live + pipeline &amp; tasks tightened</div>
+    <div class="meta-item"><strong>Prepared by</strong>Jacqui Money</div>
+  </div>
+</div>
+
+<!-- FOCUS BOX -->
+<div class="focus-box">
+  <strong>Build Day focus:</strong> The lease renewal dashboard and email automations are non-negotiable — this is a direct cashflow protection system. Everything else gets built in priority order around that core deliverable.
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <span class="legend-label">Priority:</span>
+  <div class="legend-item"><span class="dot dot-high"></span>🔴 High Priority — core goal</div>
+  <div class="legend-item"><span class="dot dot-med"></span>🟠 Medium Priority — if there's runway</div>
+  <div class="legend-item"><span class="dot dot-nice"></span>🟢 If Time Allows</div>
+  <div class="legend-item"><span class="dot dot-next"></span>⏸️ Next Build Day</div>
+</div>
+
+<div class="controls">
+  <button class="btn-toggle" onclick="toggleAll()">Expand / Collapse All</button>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     HIGH PRIORITY
+     ══════════════════════════════════════ -->
+<div class="group-label">🔴 High Priority</div>
+
+
+<!-- SECTION 1: LEASE RENEWAL SYSTEM -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-red">📄</div>
+    <div>
+      <div class="section-title">1. Lease Renewal Dashboard &amp; Automation System</div>
+      <div class="section-subtitle">Contracts table · New interface · Email + Slack automations · 12/9/6/3-month triggers</div>
+    </div>
+    <span class="section-badge badge-high">🔴 High Priority</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+
+    <div class="note-box">
+      <strong>Katie on why this matters:</strong> "What I really need is like, who at this point in time should I be calling? Because if somebody's not going to renew and they're moving out and we haven't listed the space, now all of a sudden we don't have rent. Getting in front of that communication is critical for me — otherwise it's a cashflow thing. We don't have the space or it's empty."
+    </div>
+
+    <div class="info-box">
+      <strong>What's already there:</strong> Contracts table with AI data extraction, rent schedule (Terms 1–5), quality check field, and AI-extracted critical dates. Lease End Date is populated by the AI extraction flow. Start with manual date trigger on build day; switch to AI-extracted date once confirmed reliable.
+    </div>
+
+    <div class="decision-box">
+      <strong>Architecture decision:</strong> Build the Kanban and automations against manually entered dates first. Once the AI extraction is confirmed accurate and stable, update the automation triggers to point to the AI-extracted Lease End Date field — no rebuild needed, just a field swap.
+    </div>
+
+    <div class="sub-heading">Contracts Table — New Fields</div>
+    <table class="field-table">
+      <tr><th>Field</th><th>Type</th><th>Status</th><th>Notes</th></tr>
+      <tr><td>Adjusted Triple Net</td><td>Currency</td><td class="missing">❌ Add</td><td>Override static contract NNN with current reconciled rate</td></tr>
+      <tr><td>Adjusted Utility</td><td>Currency</td><td class="missing">❌ Add</td><td>Override static utility fee with current reconciled amount</td></tr>
+      <tr><td>Renewal Status</td><td>Single Select</td><td class="missing">❌ Add</td><td>Renewing · Not Renewing · TBC · Vacating — must be editable inline in dashboard</td></tr>
+      <tr><td>Months to Lease End</td><td>Formula</td><td class="missing">❌ Add</td><td>DATETIME_DIFF(Lease End Date, TODAY(), 'months') — drives Kanban grouping</td></tr>
+    </table>
+
+    <div class="sub-heading">Lease Renewal Dashboard — New Interface</div>
+    <ul class="item-list">
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Create "Lease Renewal Dashboard" interface</div>
+          <div class="item-detail">New interface → Blank. Katie's lease management command centre. Six record list sections from the Contracts table, each filtered on Lease End Date relative to today. Visible fields in each section: Tenant, Unit, Property, Lease End Date, Renewal Status (editable inline), linked Tasks.</div>
+          <div class="item-tags"><span class="tag tag-interface">Interface</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Build the 6 renewal window sections</div>
+          <div class="item-detail">
+            🟡 12 Months Out — Lease End Date 11–13 months from today<br>
+            🟠 9 Months Out — Lease End Date 8–10 months from today<br>
+            🔴 6 Months Out — Lease End Date 5–7 months from today<br>
+            ⚫ 3 Months Out — Lease End Date 2–4 months from today<br>
+            🚨 Urgent / Overdue — Lease End Date within 2 months or past, Renewal Status ≠ Renewed<br>
+            📦 Vacating — Renewal Status = Vacating or Not Renewing
+          </div>
+          <div class="item-tags"><span class="tag tag-interface">Interface</span><span class="tag tag-formula">Formula</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Confirm Renewal Status is editable inline</div>
+          <div class="item-detail">This is the key usability feature — Katie needs to be able to update Renewal Status directly from the dashboard without opening the record. Test with a real contract: update status in the interface and confirm it saves to the Contracts table.</div>
+          <div class="item-tags"><span class="tag tag-interface">Interface</span></div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="sub-heading">Renewal Email Automations</div>
+
+    <div class="note-box">
+      <strong>Waiting on Katie:</strong> Email copy for 12, 9, 6, and 3-month touchpoints due by Monday. Build the automation triggers and structure on build day; slot in the actual copy when received. Automations can be set to draft/off until copy is confirmed.
+    </div>
+
+    <ul class="item-list">
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">12-month renewal email automation</div>
+          <div class="item-detail">Trigger: Lease End Date is exactly 12 months from today (daily check). Condition: Renewal Status is blank or TBC. Action: Send email to Tenant (from Katie's connected email). Create a task: "Lease renewal — [Tenant] — 12-month check." Katie's intent: "Hey, your lease is renewing in 12 months. We just want to check — are you interested in renewing or not? Please let us know."</div>
+          <div class="item-tags"><span class="tag tag-automation">Automation</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">9-month renewal email automation</div>
+          <div class="item-detail">Trigger: Lease End Date is exactly 9 months from today. Condition: Renewal Status is still blank or TBC (no confirmed renewal received). Action: Send follow-up email + create task. Escalation tone — we still need to know.</div>
+          <div class="item-tags"><span class="tag tag-automation">Automation</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">6-month renewal email automation</div>
+          <div class="item-detail">Trigger: Lease End Date is exactly 6 months from today. Condition: Renewal Status is not Renewing. Action: Send email + create task. Katie's intent: "If we don't know you're renewing, we're going to be listing your space." Populate email with the 120-day listing trigger date calculated from the contract execution date.</div>
+          <div class="item-tags"><span class="tag tag-automation">Automation</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">3-month renewal / listing alert automation</div>
+          <div class="item-detail">Trigger: Lease End Date is exactly 3 months from today. Condition: Renewal Status is not Renewing. Action: Send urgent email + create high-priority task "List property in 30 days — [Unit/Property]." This is the last-chance communication before active listing begins.</div>
+          <div class="item-tags"><span class="tag tag-automation">Automation</span></div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="sub-heading">Lease Renewal Slack Notifications</div>
+    <ul class="item-list">
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Slack alert when renewal email fires</div>
+          <div class="item-detail">Alongside each renewal email automation, add a Slack notification to Katie's confirmed channel confirming the email was sent: "📬 Renewal email sent to [Tenant] — [Unit] — [X months out]. Renewal Status: [current status]." Katie should know when the system has touched a tenant without manually checking.</div>
+          <div class="item-tags"><span class="tag tag-automation">Automation</span><span class="tag tag-slack">Slack</span></div>
+        </div>
+      </li>
+    </ul>
+
+  </div>
+</div>
+
+
+<!-- SECTION 2: MEETING TASKS AUTOMATION UPDATE -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-teal">📋</div>
+    <div>
+      <div class="section-title">2. Meeting-Tasks Automation Update</div>
+      <div class="section-subtitle">Fathom → Airtable · Company/project linking · Attendee check · Meeting notes · Remove raw transcript</div>
+    </div>
+    <span class="section-badge badge-high">🔴 High Priority</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+
+    <div class="info-box">
+      <strong>What's already there:</strong> Fathom transcript → AI extracts action items → Tasks created in Airtable with Pending Approval status → Katie reviews in Pending Approval interface and assigns to team members → assignee receives email notification. The core pipeline is working. This build upgrades what the automation captures per task.
+    </div>
+
+    <ul class="item-list">
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Add company and project linking to task creation</div>
+          <div class="item-detail">When the automation creates tasks from meeting transcripts, it should attempt to identify the associated Company and Project from the meeting context (attendees, meeting title, transcript content) and link them automatically. If a confident match exists in Airtable, link it. If no match, leave blank for Katie to fill during Pending Approval review.</div>
+          <div class="item-tags"><span class="tag tag-automation">Automation</span><span class="tag tag-ai">AI</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Add pipeline linking to task creation</div>
+          <div class="item-detail">Where a task relates to an active pipeline record (e.g. prospect follow-up), link the task to the corresponding Pipeline entry. This closes the loop between meeting activity and pipeline tracking — so tasks from a client meeting appear against that pipeline record.</div>
+          <div class="item-tags"><span class="tag tag-automation">Automation</span><span class="tag tag-table">Table</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Add attendee extraction and Contacts check</div>
+          <div class="item-detail">Pull calendar attendees from the meeting. For each attendee, check if they exist in the Contacts table. If they don't exist, create a Pending Approval task for Katie: "Add new contact — [Name] from [Company] — met in [Meeting Title]." No silent additions — everything goes through Katie's approval.</div>
+          <div class="item-tags"><span class="tag tag-automation">Automation</span><span class="tag tag-ai">AI</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Add meeting notes generation to automation</div>
+          <div class="item-detail">Add an Airtable AI step to the existing meeting automation. Using the Fathom transcript text + attendee list as inputs, the AI generates structured meeting notes based on Katie's template (to be provided). Notes stored as a long text field on the Meeting record. Katie said: "It will take me like two hours to create meeting notes" — this eliminates that entirely.</div>
+          <div class="item-tags"><span class="tag tag-automation">Automation</span><span class="tag tag-ai">AI</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Remove raw transcript from automation output</div>
+          <div class="item-detail">The full transcript text is currently included in task/meeting records. Remove it — the transcript lives in Fathom; Airtable should only store the structured outputs (action items, meeting notes, attendees). Keeps records clean and the AI Q&amp;A feature in the Meeting Transcripts Dashboard remains the right tool for querying full transcripts.</div>
+          <div class="item-tags"><span class="tag tag-automation">Automation</span></div>
+        </div>
+      </li>
+    </ul>
+
+  </div>
+</div>
+
+
+<!-- SECTION 3: SLACK TASK ASSIGNMENT NOTIFICATION (CARRIED OVER) -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-orange">🔔</div>
+    <div>
+      <div class="section-title">3. Slack Notification on Task Assignment</div>
+      <div class="section-subtitle">Tasks table · Carried over from last build day · Airtable → Slack</div>
+    </div>
+    <span class="section-badge badge-high">🔴 High Priority</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+
+    <div class="info-box">
+      <strong>Carried over from last build day.</strong> Email notification on task assignment is already working. This adds the Slack layer so team members get an immediate ping in the channel, not just an email.
+    </div>
+
+    <ul class="item-list">
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Create task assignment Slack automation</div>
+          <div class="item-detail">Trigger: "When a record is updated" → Table: Tasks → Field: Assigned Person. Condition: Assigned Person is not empty. Action: Send Slack message to Katie's confirmed channel. Message format: "New task assigned: [Task Name] | Due: [Due Date] | Project: [Project]"</div>
+          <div class="item-tags"><span class="tag tag-automation">Automation</span><span class="tag tag-slack">Slack</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Test: assign a task → confirm Slack message arrives</div>
+          <div class="item-detail">Assign a real task to a team member. Check Slack within 1–2 minutes. Confirm message content is correct: task name, due date, and project are all populated. Confirm it doesn't fire when a task is unassigned or re-assigned to the same person.</div>
+          <div class="item-tags"><span class="tag tag-automation">Automation</span></div>
+        </div>
+      </li>
+    </ul>
+
+  </div>
+</div>
+
+
+<!-- SECTION 4: AIRTABLE ADMIN -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-red">⚙️</div>
+    <div>
+      <div class="section-title">4. Airtable Admin — Duplicate User &amp; Billing</div>
+      <div class="section-subtitle">Quick fix · Do first thing at the start of build day</div>
+    </div>
+    <span class="section-badge badge-high">🔴 High Priority</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+
+    <ul class="item-list">
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Fix duplicate May user in Airtable</div>
+          <div class="item-detail">Investigate the duplicate user entry flagged from May. Identify which account is the duplicate, confirm with Katie, and remove. Check whether this is triggering any incorrect billing or automations.</div>
+          <div class="item-tags"><span class="tag tag-admin">Admin</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Confirm billing is correct</div>
+          <div class="item-detail">After removing the duplicate, verify the Airtable billing seat count is accurate. Confirm Katie is not being charged for a ghost user. Note the $20/user cost — any extra seats should be removed promptly.</div>
+          <div class="item-tags"><span class="tag tag-admin">Admin</span></div>
+        </div>
+      </li>
+    </ul>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     MEDIUM PRIORITY
+     ══════════════════════════════════════ -->
+<div class="group-label">🟠 Medium Priority</div>
+
+
+<!-- SECTION 5: AI COMPANY RESEARCH AGENT -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-purple">🎯</div>
+    <div>
+      <div class="section-title">5. AI Company Research Agent</div>
+      <div class="section-subtitle">Companies table · Airtable AI agent · Outreach context</div>
+    </div>
+    <span class="section-badge badge-med">🟠 Medium Priority</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+
+    <div class="info-box">
+      <strong>What's already there:</strong> Companies table exists with core fields. Pipeline table links to Companies. Katie discussed this in context of the lead-capture workflow — the AI agent provides the research context that makes outreach meaningful, not cold.
+    </div>
+
+    <ul class="item-list">
+      <li class="item">
+        <div class="item-bullet item-bullet-med"></div>
+        <div class="item-content">
+          <div class="item-name">Build AI company research agent in Companies table</div>
+          <div class="item-detail">Add an AI field to the Companies table. When a new company record is created (manually or via lead-capture), the AI agent researches the company — industry, size, key people, recent news, what they do — and writes a summary into a Research Summary field. This context appears when Katie or the team views a pipeline prospect.</div>
+          <div class="item-tags"><span class="tag tag-ai">AI</span><span class="tag tag-table">Table</span><span class="tag tag-field">Field</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet item-bullet-med"></div>
+        <div class="item-content">
+          <div class="item-name">Surface research summary in CEO Command Centre</div>
+          <div class="item-detail">Add the Research Summary field as a visible column in the pipeline/prospects view within the CEO Command Centre interface. Katie should be able to see the AI research inline without opening the full company record.</div>
+          <div class="item-tags"><span class="tag tag-interface">Interface</span></div>
+        </div>
+      </li>
+    </ul>
+
+  </div>
+</div>
+
+
+<!-- SECTION 6: PIPELINE INTERFACE UPDATES -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-blue">🖥️</div>
+    <div>
+      <div class="section-title">6. Pipeline Interface Updates</div>
+      <div class="section-subtitle">CEO Command Centre · Kanban settings · Field rename</div>
+    </div>
+    <span class="section-badge badge-med">🟠 Medium Priority</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+
+    <ul class="item-list">
+      <li class="item">
+        <div class="item-bullet item-bullet-med"></div>
+        <div class="item-content">
+          <div class="item-name">Collapse empty stages on pipeline Kanban view</div>
+          <div class="item-detail">In the pipeline Kanban interface, enable the "collapse empty columns" setting. This removes visual clutter from stages with no active prospects — Katie's pipeline view should only show stages with records in them.</div>
+          <div class="item-tags"><span class="tag tag-interface">Interface</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet item-bullet-med"></div>
+        <div class="item-content">
+          <div class="item-name">Add Project filter to pipeline interface</div>
+          <div class="item-detail">Add a filter control to the pipeline view so Katie can filter prospects by associated project. Useful for scoping the pipeline view to a specific development or property project without leaving the interface.</div>
+          <div class="item-tags"><span class="tag tag-interface">Interface</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet item-bullet-med"></div>
+        <div class="item-content">
+          <div class="item-name">Rename "Converted to Project" → "Associated Project"</div>
+          <div class="item-detail">In the Pipeline table, rename the linked field from "Converted to Project" to "Associated Project." The new name reflects the actual behaviour — a prospect can be tagged to a project without leaving the pipeline (e.g. they're still in active pursuit). Update any interface field labels that reference the old name.</div>
+          <div class="item-tags"><span class="tag tag-field">Field</span><span class="tag tag-table">Table</span></div>
+        </div>
+      </li>
+    </ul>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     IF TIME ALLOWS
+     ══════════════════════════════════════ -->
+<div class="group-label">🟢 If Time Allows</div>
+
+
+<!-- SECTION 7: LEAD CAPTURE FROM EMAIL -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-teal">📬</div>
+    <div>
+      <div class="section-title">7. Lead Capture from Email Inquiries</div>
+      <div class="section-subtitle">Airtable email automation · Incoming inquiries → Companies → Contacts → Pipeline</div>
+    </div>
+    <span class="section-badge badge-nice">🟢 If Time Allows</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+
+    <div class="info-box">
+      <strong>Where Katie is at:</strong> Currently adding leads from email inquiries manually. The goal is to automate this in Airtable — when a new inquiry email arrives, an automation creates the Company, Contact, and Pipeline records and triggers the AI research agent.
+    </div>
+
+    <ul class="item-list">
+      <li class="item">
+        <div class="item-bullet item-bullet-nice"></div>
+        <div class="item-content">
+          <div class="item-name">Build email inquiry → Pipeline automation in Airtable</div>
+          <div class="item-detail">Using Airtable's email integration (connected inbox), build an automation that fires when a new inquiry email arrives. An Airtable AI step extracts company name, contact name, and email from the message body. Automation then creates the three-record chain: Company record → Contact record → Pipeline record. Company research AI agent fires automatically on the new Company.</div>
+          <div class="item-tags"><span class="tag tag-ai">AI</span><span class="tag tag-automation">Automation</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet item-bullet-nice"></div>
+        <div class="item-content">
+          <div class="item-name">Slack notification when new lead is added</div>
+          <div class="item-detail">Add a Slack notification step to the automation: "New lead added to pipeline: [Company Name] — [Contact] — [Email]." Katie gets a ping each time a new inquiry is captured so she knows the system caught it.</div>
+          <div class="item-tags"><span class="tag tag-automation">Automation</span><span class="tag tag-slack">Slack</span></div>
+        </div>
+      </li>
+    </ul>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     NEXT BUILD DAY
+     ══════════════════════════════════════ -->
+<div class="group-label">⏸️ Next Build Day</div>
+
+
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-grey">📅</div>
+    <div>
+      <div class="section-title">8. Parked — Next Build Day</div>
+      <div class="section-subtitle">Not in scope today — either waiting on Katie's inputs or blocked by earlier work</div>
+    </div>
+    <span class="section-badge badge-next">⏸️ Next Build Day</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+    <ul class="item-list">
+      <li class="item">
+        <div class="item-bullet item-bullet-next"></div>
+        <div class="item-content">
+          <div class="item-name">Automated Meeting Notes (Airtable AI automation)</div>
+          <div class="item-detail">Blocked — waiting on Katie to provide her meeting notes template. Once the template is in, the meeting-tasks automation gets an additional AI step that populates the notes from the Fathom transcript + attendees and stores them in Airtable.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet item-bullet-next"></div>
+        <div class="item-content">
+          <div class="item-name">Renewal email copy slot-in</div>
+          <div class="item-detail">The automation structure for 12/9/6/3-month emails will be built on this build day, but the actual email copy is waiting on Katie (due by Monday). Once received, slot copy into the automations and activate.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet item-bullet-next"></div>
+        <div class="item-content">
+          <div class="item-name">Softr Client &amp; Team Portals</div>
+          <div class="item-detail">Future build. Goal is a Softr frontend for clients and team members, with Airtable as the backend — solves the $20/user Airtable cost and provides better UX. Waiting on Katie to connect remaining Gmail/Outlook accounts and calendars to Airtable first.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet item-bullet-next"></div>
+        <div class="item-content">
+          <div class="item-name">AI Renewal Template Generation</div>
+          <div class="item-detail">Katie's longer-term vision: "Ideally AI creates that template renewal because it's a template renewal — I check it and then it gets sent." This requires the full lease renewal system to be running first. Park until the renewal Kanban and automations are confirmed working.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet item-bullet-next"></div>
+        <div class="item-content">
+          <div class="item-name">Tenant Portal (Softr)</div>
+          <div class="item-detail">Katie's longer-term vision: tenants confirm renewal intent via a portal. "Please confirm — yes I want to renew, no I don't. And now I don't have to talk to them until I need to." Part of the broader Softr portal build.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- FOOTER -->
+<div class="footer">
+  <div>Prepared by <strong>Jacqui Money</strong> · jacqui@virtualduo.co.za</div>
+  <div>Based on strategy call with Katie Kim · 22 May 2026</div>
+</div>
+
+<script>
+  function toggleSection(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.chevron');
+    body.classList.toggle('open');
+    chevron.classList.toggle('open');
+  }
+  let allOpen = false;
+  function toggleAll() {
+    allOpen = !allOpen;
+    document.querySelectorAll('.section-body').forEach(b => b.classList.toggle('open', allOpen));
+    document.querySelectorAll('.chevron').forEach(c => c.classList.toggle('open', allOpen));
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    const bodies = document.querySelectorAll('.section-body');
+    const chevrons = document.querySelectorAll('.chevron');
+    for (let i = 0; i < Math.min(2, bodies.length); i++) {
+      bodies[i].classList.add('open');
+      chevrons[i].classList.add('open');
+    }
+  });
+</script>
+</body>
+</html>
