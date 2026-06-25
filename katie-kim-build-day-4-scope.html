@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katie Kim — Build Day Scope of Work</title>
+<style>
+  :root {
+    --brand-primary: #1C3344;
+    --brand-accent: #2E9E72;
+    --brand-accent-light: #E8F7F2;
+    --brand-warm: #E8904A;
+    --brand-warm-light: #FEF3E8;
+    --bg: #F6F7F8;
+    --card: #ffffff;
+    --border: #E2E8F0;
+    --text-dark: #1A2332;
+    --text-mid: #4A5568;
+    --text-light: #718096;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text-dark);
+    padding: 24px 20px 60px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--brand-primary) 0%, #243D52 100%);
+    color: white;
+    border-radius: 14px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+  }
+  .header-brand {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
+    text-transform: uppercase; color: var(--brand-accent); margin-bottom: 6px;
+  }
+  .header h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+  .header .subtitle { font-size: 13px; color: #A0AEC0; }
+  .header .meta { display: flex; gap: 14px; margin-top: 18px; flex-wrap: wrap; }
+  .meta-item {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 8px 14px; font-size: 12px;
+  }
+  .meta-item strong {
+    display: block; color: var(--brand-accent);
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 2px;
+  }
+
+  /* FOCUS BOX */
+  .focus-box {
+    background: var(--brand-accent-light); border: 1px solid #A8DFCB;
+    border-radius: 10px; padding: 14px 18px; margin-bottom: 20px;
+    font-size: 13px; color: #1A5C3F;
+  }
+  .focus-box strong { color: #166647; }
+
+  /* LEGEND */
+  .legend {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 18px;
+    display: flex; gap: 20px; flex-wrap: wrap; align-items: center;
+    margin-bottom: 20px; font-size: 12px;
+  }
+  .legend-label { font-weight: 700; color: var(--text-mid); margin-right: 4px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; color: var(--text-mid); }
+  .dot { width: 9px; height: 9px; border-radius: 50%; }
+  .dot-high { background: #E53E3E; }
+  .dot-med  { background: var(--brand-warm); }
+  .dot-nice { background: var(--brand-accent); }
+  .dot-next { background: #A0AEC0; }
+
+  /* GROUP LABELS */
+  .group-label {
+    font-size: 11px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 1px; color: #A0AEC0; margin: 28px 0 10px 4px;
+  }
+
+  /* SECTIONS */
+  .section {
+    background: var(--card); border-radius: 12px; border: 1px solid var(--border);
+    margin-bottom: 16px; overflow: hidden;
+  }
+  .section-header {
+    padding: 16px 20px; display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid var(--border); cursor: pointer; user-select: none;
+  }
+  .section-header:hover { background: #FAFBFC; }
+  .section-icon {
+    width: 38px; height: 38px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; flex-shrink: 0;
+  }
+  .icon-teal   { background: var(--brand-accent-light); }
+  .icon-blue   { background: #EBF8FF; }
+  .icon-purple { background: #F3E8FF; }
+  .icon-orange { background: var(--brand-warm-light); }
+  .icon-red    { background: #FFF5F5; }
+  .icon-grey   { background: #F7FAFC; }
+  .section-title    { font-size: 15px; font-weight: 700; color: var(--text-dark); }
+  .section-subtitle { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+  .section-badge {
+    margin-left: auto; font-size: 11px; font-weight: 600;
+    border-radius: 12px; padding: 3px 10px; flex-shrink: 0;
+  }
+  .badge-high { background: #FED7D7; color: #C53030; }
+  .badge-med  { background: #FDEBD2; color: #C05621; }
+  .badge-nice { background: #C6F6D5; color: #276749; }
+  .badge-next { background: #E2E8F0; color: #718096; }
+  .chevron { font-size: 10px; color: #A0AEC0; margin-left: 8px; transition: transform 0.2s; }
+  .chevron.open { transform: rotate(90deg); }
+
+  .section-body { padding: 20px; display: none; }
+  .section-body.open { display: block; }
+
+  /* ITEM LIST — no checkboxes */
+  .item-list { list-style: none; }
+  .item {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 11px 0; border-bottom: 1px solid #F1F5F9;
+  }
+  .item:last-child { border-bottom: none; }
+  .item-bullet {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--brand-accent); flex-shrink: 0; margin-top: 6px;
+  }
+  .item-bullet-med  { background: var(--brand-warm); }
+  .item-bullet-nice { background: #68D391; }
+  .item-bullet-next { background: #CBD5E0; }
+  .item-content { flex: 1; }
+  .item-name   { font-size: 13px; font-weight: 600; color: #2D3748; }
+  .item-detail { font-size: 12px; color: var(--text-light); margin-top: 3px; line-height: 1.5; }
+  .item-tags   { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 5px; }
+  .tag {
+    font-size: 10px; font-weight: 600; padding: 2px 7px;
+    border-radius: 10px; text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  .tag-table      { background: #E9D8FD; color: #553C9A; }
+  .tag-interface  { background: #BEE3F8; color: #2B6CB0; }
+  .tag-automation { background: #FEFCBF; color: #744210; }
+  .tag-field      { background: #FED7D7; color: #822727; }
+  .tag-ai         { background: #C6F6D5; color: #22543D; }
+  .tag-formula    { background: #E2E8F0; color: #4A5568; }
+  .tag-katie      { background: #FBD8B0; color: #8A4B12; }
+
+  /* CALLOUT BOXES */
+  .note-box {
+    background: #FFFBEB; border-left: 3px solid #F6AD55;
+    border-radius: 0 8px 8px 0; padding: 10px 14px; margin: 12px 0;
+    font-size: 12px; color: #744210;
+  }
+  .note-box strong { color: #C05621; }
+  .info-box {
+    background: #EBF8FF; border-left: 3px solid #63B3ED;
+    border-radius: 0 8px 8px 0; padding: 10px 14px; margin: 12px 0;
+    font-size: 12px; color: #2C5282;
+  }
+  .decision-box {
+    background: var(--brand-accent-light); border-left: 3px solid var(--brand-accent);
+    border-radius: 0 8px 8px 0; padding: 10px 14px; margin: 12px 0;
+    font-size: 12px; color: #1A5C3F;
+  }
+
+  /* TABLES */
+  .field-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 12px; }
+  .field-table th {
+    background: #F7FAFC; padding: 7px 10px; text-align: left;
+    font-weight: 700; color: var(--text-mid); border-bottom: 2px solid var(--border);
+  }
+  .field-table td { padding: 7px 10px; border-bottom: 1px solid #F1F5F9; color: #2D3748; }
+  .field-table tr:last-child td { border-bottom: none; }
+  .exists  { color: #38A169; font-weight: 700; }
+  .missing { color: #E53E3E; font-weight: 700; }
+
+  /* SUB-HEADINGS */
+  .sub-heading {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.8px; color: var(--text-light); margin: 16px 0 8px;
+  }
+  .divider { height: 1px; background: #F1F5F9; margin: 14px 0; }
+
+  /* CONTROLS */
+  .controls { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+  .btn-toggle {
+    background: none; border: 1px solid var(--border); border-radius: 6px;
+    padding: 5px 14px; font-size: 12px; color: var(--text-light); cursor: pointer;
+  }
+  .btn-toggle:hover { background: #F7FAFC; }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 40px; padding: 20px 24px;
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    font-size: 12px; color: var(--text-light);
+  }
+  .footer strong { color: var(--brand-accent); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-brand">Jacqui Money — Systems &amp; Automation</div>
+  <h1>🏗️ Build Day Scope of Work — Katie Kim</h1>
+  <div class="subtitle">Automated meeting-review &amp; task workflow in Airtable (TKG Operations)</div>
+  <div class="meta">
+    <div class="meta-item"><strong>Build Day</strong>1 July 2026</div>
+    <div class="meta-item"><strong>System</strong>TKG Operations (Airtable)</div>
+    <div class="meta-item"><strong>Goal</strong>Reviewed, accurate tasks from every meeting</div>
+    <div class="meta-item"><strong>Prepared by</strong>Jacqui Money</div>
+  </div>
+</div>
+
+<!-- FOCUS -->
+<div class="focus-box">
+  <strong>Build Day focus:</strong> Get the meeting-review workflow working end to end — tasks auto-created from transcripts, matched to the right project and company, assigned to the right person, and checked for duplicates before anything goes live. A human review step keeps the data layer clean. The status-report layer (Claude-generated meeting notes) is set up on Katie's side and connects once the data is solid.
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <span class="legend-label">Priority:</span>
+  <div class="legend-item"><span class="dot dot-high"></span>🔴 High Priority — core goal</div>
+  <div class="legend-item"><span class="dot dot-med"></span>🟠 Medium Priority — if there's runway</div>
+  <div class="legend-item"><span class="dot dot-next"></span>⏸️ Next Build Day</div>
+</div>
+
+<div class="controls">
+  <button class="btn-toggle" onclick="toggleAll()">Expand / Collapse All</button>
+</div>
+
+<!-- ══════════════════════════════════════
+     HIGH PRIORITY
+     ══════════════════════════════════════ -->
+<div class="group-label">🔴 High Priority</div>
+
+<!-- SECTION 1 -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-teal">📋</div>
+    <div>
+      <div class="section-title">1. Meeting-Review Workflow — Auto-Assign, Duplicate Check &amp; Flagging</div>
+      <div class="section-subtitle">Test and refine the automations that turn transcripts into reviewed tasks</div>
+    </div>
+    <span class="section-badge badge-high">🔴 High Priority</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+
+    <div class="info-box">
+      <strong>What's already there:</strong> Fathom transcripts land in the Call Transcripts table via webhook (long calls are split automatically), and tasks are already being auto-created and flagged Pending Approval. This build day refines that flow so the tasks land matched, assigned and de-duplicated.
+    </div>
+
+    <div class="note-box">
+      <strong>From the call:</strong> "I want to be able to go into call transcripts and just review the ones I haven't reviewed yet… I don't want to review a meeting without having that duplicate task check."
+    </div>
+
+    <div class="sub-heading">Match the meeting to the right records</div>
+    <ul class="item-list">
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Auto-populate Related Project, Related Company and Meeting Attendees from the meeting title</div>
+          <div class="item-detail">Search order: project → company → contact (project first — it appears in the title most often). On a clean single match, populate the related fields. On any ambiguity (e.g. two "Mike"s, two companies), populate nothing — never write the wrong data.</div>
+          <div class="item-tags"><span class="tag tag-automation">Automation</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">"Call Transcripts for Review" interface</div>
+          <div class="item-detail">A view that isolates meetings Katie hasn't reviewed yet, and a Reviewed state once she's confirmed the project, company and contacts. Lets her crank through transcripts when she has time, then move each from Pending to Reviewed.</div>
+          <div class="item-tags"><span class="tag tag-interface">Interface</span></div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="sub-heading">Assign &amp; de-duplicate (button-triggered, after Katie confirms)</div>
+    <ul class="item-list">
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Auto-assign tasks to the people associated with the project</div>
+          <div class="item-detail">Once Katie confirms the company, project and contacts, a button runs the assignment: each task in the meeting is assigned to the relevant contact / team member for that project.</div>
+          <div class="item-tags"><span class="tag tag-automation">Automation</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Duplicate check — two levels</div>
+          <div class="item-detail">Level 1: flag duplicate tasks generated inside the same meeting. Level 2: a button compares the meeting's tasks against all existing tasks on that project (from prior meetings) and flags likely duplicates — e.g. "submit for permit" vs "did you submit to the city". De-dup is at project level.</div>
+          <div class="item-tags"><span class="tag tag-automation">Automation</span><span class="tag tag-ai">AI</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Show the suspected duplicate's title and a link to the original</div>
+          <div class="item-detail">Because the check runs from the transcript view, the earlier duplicate lives in a different view. The flag will carry the original task's title and a link to the record so Katie can decide which to keep or delete without hunting for it.</div>
+          <div class="item-tags"><span class="tag tag-automation">Automation</span></div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="decision-box">
+      <strong>Decision:</strong> Tasks stay Pending Approval until the meeting is reviewed — it doubles as Katie's "review this meeting" signal. Notifications only fire after approval (see Section 2).
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-orange">🔔</div>
+    <div>
+      <div class="section-title">2. Contact &amp; Assignee Linking — Internal / External Assignment &amp; Notifications</div>
+      <div class="section-subtitle">One assignment field that works for the team now and clients later</div>
+    </div>
+    <span class="section-badge badge-high">🔴 High Priority</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+
+    <div class="info-box">
+      <strong>The constraint:</strong> The Assignee field only accepts paid Airtable users, so tasks can't be assigned directly to external contacts. Adding everyone as a paid seat isn't the answer.
+    </div>
+
+    <ul class="item-list">
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Assign tasks to Contacts (internal and external)</div>
+          <div class="item-detail">All task assignment runs through the Contact field, so anyone — team or client — can be linked to a task without paying for a seat. Sets up the future where clients see their own tasks in a portal.</div>
+          <div class="item-tags"><span class="tag tag-field">Field</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Link Contact → User so the team still gets native notifications</div>
+          <div class="item-detail">When a contact is also an internal team member, the automation auto-populates the Assignee (User) field — keeping the Airtable bell notification and the "current user" My Tasks view working. External contacts simply leave Assignee empty.</div>
+          <div class="item-tags"><span class="tag tag-automation">Automation</span><span class="tag tag-field">Field</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Notifications fire only after a meeting is approved</div>
+          <div class="item-detail">No one is notified when tasks are first auto-created (they're unverified). Once the meeting is reviewed, de-duplicated and approved, assignees are notified that their tasks are ready.</div>
+          <div class="item-tags"><span class="tag tag-automation">Automation</span></div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="note-box">
+      <strong>Katie owns:</strong> Adding all team members into the Contacts table so they can be linked as assignees.
+      <span class="tag tag-katie" style="margin-left:6px;">Katie</span>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-purple">🎯</div>
+    <div>
+      <div class="section-title">3. Company &amp; Contact Data Structure</div>
+      <div class="section-subtitle">Make sure the matching automation has clean fields to land in</div>
+    </div>
+    <span class="section-badge badge-high">🔴 High Priority</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+    <ul class="item-list">
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Rename "Related Company" → "Related Companies"</div>
+          <div class="item-detail">This field holds the project's client company — the one the project is actually for (e.g. Highmark Distillery for the Highmark project). The plural label reads correctly for the team.</div>
+          <div class="item-tags"><span class="tag tag-field">Field</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Add a separate "Related Vendors" connected field</div>
+          <div class="item-detail">Still links to the Companies table, but kept distinct from the client company — for engineers and vendors on a project (e.g. Southwest Engineers, Thoroughbred Spirits). Keeps "who the project is for" separate from "who's working on it".</div>
+          <div class="item-tags"><span class="tag tag-field">Field</span><span class="tag tag-table">Table</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Solo-person-as-company rule</div>
+          <div class="item-detail">When a project's client is an individual with no business, they come in as a Contact and are also used as the company (e.g. Jennifer Humphrey = contact and company for the Humphrey project).</div>
+          <div class="item-tags"><span class="tag tag-table">Table</span></div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="note-box">
+      <strong>Watch-out from the call:</strong> The same company can have different service lines that are really separate projects (Highmark Distillery vs Highmark real-estate vs a vendor like Thoroughbred Spirits). Consistent naming in calendar titles and company records is what keeps the matching accurate.
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-red">📄</div>
+    <div>
+      <div class="section-title">4. Meeting Notes &amp; Approval Fields</div>
+      <div class="section-subtitle">Set up the fields the status-report layer will use</div>
+    </div>
+    <span class="section-badge badge-high">🔴 High Priority</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+    <ul class="item-list">
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Add a "Status Report" attachment field on Call Transcripts</div>
+          <div class="item-detail">Behaves like the existing contract field — holds the generated meeting-notes PDF against the meeting record. Becomes the source the future portal can link to.</div>
+          <div class="item-tags"><span class="tag tag-field">Field</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Add a "Notes Reviewed" approval field</div>
+          <div class="item-detail">So nothing AI-generated reaches a client unreviewed — Katie approves the report before it's shared with the client or team.</div>
+          <div class="item-tags"><span class="tag tag-field">Field</span></div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="decision-box">
+      <strong>Katie owns the status-report generation.</strong> Claude builds each meeting report on Katie's side — summary from the transcript, tasks pulled from the <em>reviewed</em> Airtable records (not the raw transcript) — and writes the PDF back into the Status Report field. Because Airtable can't trigger Claude directly, this runs as a scheduled batch ("any reviewed meeting with no notes → generate"). It connects once the data layer is solid.
+      <span class="tag tag-katie" style="margin-left:6px;">Katie</span>
+      <span class="tag tag-ai" style="margin-left:4px;">AI</span>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-grey">🧹</div>
+    <div>
+      <div class="section-title">5. Data-Layer Clean-Up &amp; Governance</div>
+      <div class="section-subtitle">Keep the data layer sacred before building on top of it</div>
+    </div>
+    <span class="section-badge badge-high">🔴 High Priority</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+    <ul class="item-list">
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Review and remove duplicate / unnecessary fields</div>
+          <div class="item-detail">Clean up the stray fields flagged on the call — e.g. a double Tasks / Tasks 2 field, a duplicated field in pipeline/projects, a duplicated unit field, and stray single-select options created by AI prompts (a "podcast" and a "client deliverables" category that weren't part of the original build).</div>
+          <div class="item-tags"><span class="tag tag-table">Table</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet"></div>
+        <div class="item-content">
+          <div class="item-name">Restrict who can create fields in the data layer</div>
+          <div class="item-detail">Several issues came from other people or AI prompts auto-creating fields. Lock down structural edits so the data layer stays clean; data entry happens through interface forms, not direct edits.</div>
+          <div class="item-tags"><span class="tag tag-table">Table</span></div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="note-box">
+      <strong>From the call:</strong> "We just need to be very careful who has access to this data layer and who is creating things inside of it… keep that data layer sacred."
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MEDIUM PRIORITY
+     ══════════════════════════════════════ -->
+<div class="group-label">🟠 Medium Priority</div>
+
+<!-- SECTION 6 -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-blue">🖥️</div>
+    <div>
+      <div class="section-title">6. My Tasks Views &amp; Status Ordering</div>
+      <div class="section-subtitle">Make the task list show what matters now, not the pending backlog</div>
+    </div>
+    <span class="section-badge badge-med">🟠 Medium Priority</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+    <ul class="item-list">
+      <li class="item">
+        <div class="item-bullet item-bullet-med"></div>
+        <div class="item-content">
+          <div class="item-name">My Tasks — Today / Overdue / Upcoming views</div>
+          <div class="item-detail">So Katie opens her tasks and sees what she's working on, not a wall of Pending Approval records.</div>
+          <div class="item-tags"><span class="tag tag-interface">Interface</span></div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet item-bullet-med"></div>
+        <div class="item-content">
+          <div class="item-name">Reorder the Status single-select</div>
+          <div class="item-detail">Airtable orders by the option order, so moving Pending Approval to the bottom and active statuses up makes the list actionable. Add To Do / In Progress / Waiting if missing.</div>
+          <div class="item-tags"><span class="tag tag-field">Field</span><span class="tag tag-katie">Katie</span></div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     NEXT BUILD DAY
+     ══════════════════════════════════════ -->
+<div class="group-label">⏸️ Next Build Day</div>
+
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <div class="section-icon icon-grey">📅</div>
+    <div>
+      <div class="section-title">7. Parked — Not in Scope for This Build Day</div>
+      <div class="section-subtitle">Flagged in the strategy call, intentionally held back</div>
+    </div>
+    <span class="section-badge badge-next">⏸️ Next Build Day</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="section-body">
+    <ul class="item-list">
+      <li class="item">
+        <div class="item-bullet item-bullet-next"></div>
+        <div class="item-content">
+          <div class="item-name">Fathom + Microsoft Teams / calendar fix</div>
+          <div class="item-detail">Zoom calls capture reliably; Teams doesn't. Troubleshoot separately (second Fathom for Katie Kim, or sort the calendar login). A means-to-an-end, not build-day work.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet item-bullet-next"></div>
+        <div class="item-content">
+          <div class="item-name">Auto-renaming meeting titles</div>
+          <div class="item-detail">Tidying titles via a third-party tool (Zapier) is risky and not needed for the core flow.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet item-bullet-next"></div>
+        <div class="item-content">
+          <div class="item-name">Client / team portal (Softr or Base44)</div>
+          <div class="item-detail">The end-goal home base where clients and team see their own tasks and status reports. Built on top of this data layer once it's stable.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="item-bullet item-bullet-next"></div>
+        <div class="item-content">
+          <div class="item-name">Triggering Claude directly from Airtable</div>
+          <div class="item-detail">Not currently possible — Claude runs on the desktop. The status-report layer uses a scheduled batch instead.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div>Prepared by <strong>Jacqui Money</strong> · jacqui@virtualduo.co.za</div>
+  <div>Based on strategy call · 10 June 2026</div>
+</div>
+
+<script>
+  function toggleSection(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.chevron');
+    body.classList.toggle('open');
+    chevron.classList.toggle('open');
+  }
+  let allOpen = false;
+  function toggleAll() {
+    allOpen = !allOpen;
+    document.querySelectorAll('.section-body').forEach(b => b.classList.toggle('open', allOpen));
+    document.querySelectorAll('.chevron').forEach(c => c.classList.toggle('open', allOpen));
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    const bodies = document.querySelectorAll('.section-body');
+    const chevrons = document.querySelectorAll('.chevron');
+    for (let i = 0; i < Math.min(2, bodies.length); i++) {
+      bodies[i].classList.add('open');
+      chevrons[i].classList.add('open');
+    }
+  });
+</script>
+</body>
+</html>
